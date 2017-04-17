@@ -67,7 +67,7 @@ export default class MainSection extends Component {
       <section className="main">
         {this.renderToggleAll(completedCount)}
         <ul className="todo-list">
-          {filteredTodos.map(todo =>
+          {filteredTodos.slice(0).reverse().map(todo =>
             <TodoItem key={todo.id} todo={todo} {...actions} />
           )}
         </ul>
