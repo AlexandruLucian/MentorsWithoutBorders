@@ -10,10 +10,10 @@ public class User {
     private int id;
 
     @DatabaseField
-    private String email;
+    private String username;
 
     @DatabaseField
-    private String password;
+    private String email;
 
     public User() {
         // ORMLite needs a no-arg constructor
@@ -23,19 +23,19 @@ public class User {
         return this.id;
     }
 
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

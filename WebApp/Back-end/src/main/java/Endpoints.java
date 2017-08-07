@@ -4,7 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import models.Todo;
+import models.Client;
 import models.User;
 import spark.Request;
 import spark.Response;
@@ -24,6 +24,43 @@ import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 public class Endpoints {
 
 
+    public static void setClientEndpoints(ConnectionSource connectionSource) {
+        try {
+            Dao<Client, String> clientDao = DaoManager.createDao(connectionSource, Client.class);
+            TableUtils.createTableIfNotExists(connectionSource, Client.class);
+
+            Spark.post("/clients", (request, response) -> {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    Client client = mapper.readValue(request.body(), Client.class);
+                    if (!client.isValid()) {
+                        response.status(HTTP_BAD_REQUEST);
+                        return "";
+                    }
+                    clientDao.create(client);
+
+                    response.status(200);
+                    response.type("application/json");
+                    return "success";
+                } catch (Exception e) {
+                    response.status(HTTP_BAD_REQUEST);
+                    return "failure";
+                }
+            });
+
+            Spark.get("/clients", (request, response) -> {
+                List<Client> clients = clientDao.queryForAll();
+
+                response.status(200);
+                response.type("application/json");
+                return dataToJson(clients);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void setUserEndpoints(ConnectionSource connectionSource) {
 
         try {
@@ -32,12 +69,12 @@ public class Endpoints {
 
             Spark.post("/users", (request, response) -> {
                 try {
+                    String username = request.queryParams("username");
                     String email = request.queryParams("email");
-                    String password = request.queryParams("password");
 
                     User user = new User();
+                    user.setUsername(username);
                     user.setEmail(email);
-                    user.setPassword(password);
 
                     userDao.create(user);
 
@@ -55,7 +92,7 @@ public class Endpoints {
                     try {
                         User user = userDao.queryForId(request.params(":id"));
                         if (user != null) {
-                            return "Email: " + user.getEmail(); // or JSON? :-)
+                            return "Username: " + user.getUsername(); // or JSON? :-)
                         } else {
                             response.status(404); // 404 Not found
                             return "User not found";
@@ -69,39 +106,6 @@ public class Endpoints {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void setTodoEndpoints(ConnectionSource connectionSource) {
-        try {
-            Dao<Todo, String> todoDao = DaoManager.createDao(connectionSource, Todo.class);
-            TableUtils.createTableIfNotExists(connectionSource, Todo.class);
-
-            Spark.post("/todos", (request, response) -> {
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    Todo todo = mapper.readValue(request.body(), Todo.class);
-                    todoDao.create(todo);
-
-                    response.status(200);
-                    response.type("application/json");
-                    return "success";
-                } catch (Exception e) {
-                    response.status(HTTP_BAD_REQUEST);
-                    return "failure";
-                }
-            });
-
-            Spark.get("/todos", (request, response) -> {
-                List<Todo> todos = todoDao.queryForAll();
-
-                response.status(200);
-                response.type("application/json");
-                return dataToJson(todos);
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public static String dataToJson(Object data) {
