@@ -1,11 +1,13 @@
+package com.example;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import models.Client;
-import models.User;
+import com.example.models.Todo;
+import com.example.models.User;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -24,20 +26,20 @@ import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 public class Endpoints {
 
 
-    public static void setClientEndpoints(ConnectionSource connectionSource) {
+    public static void setTodoEndpoints(ConnectionSource connectionSource) {
         try {
-            Dao<Client, String> clientDao = DaoManager.createDao(connectionSource, Client.class);
-            TableUtils.createTableIfNotExists(connectionSource, Client.class);
+            Dao<Todo, String> todoDao = DaoManager.createDao(connectionSource, Todo.class);
+            TableUtils.createTableIfNotExists(connectionSource, Todo.class);
 
-            Spark.post("/clients", (request, response) -> {
+            Spark.post("/todos", (request, response) -> {
                 try {
                     ObjectMapper mapper = new ObjectMapper();
-                    Client client = mapper.readValue(request.body(), Client.class);
-                    if (!client.isValid()) {
+                    Todo todo = mapper.readValue(request.body(), Todo.class);
+                    if (!todo.isValid()) {
                         response.status(HTTP_BAD_REQUEST);
                         return "";
                     }
-                    clientDao.create(client);
+                    todoDao.create(todo);
 
                     response.status(200);
                     response.type("application/json");
@@ -48,12 +50,12 @@ public class Endpoints {
                 }
             });
 
-            Spark.get("/clients", (request, response) -> {
-                List<Client> clients = clientDao.queryForAll();
+            Spark.get("/todos", (request, response) -> {
+                List<Todo> todos = todoDao.queryForAll();
 
                 response.status(200);
                 response.type("application/json");
-                return dataToJson(clients);
+                return dataToJson(todos);
             });
         } catch (Exception e) {
             e.printStackTrace();
