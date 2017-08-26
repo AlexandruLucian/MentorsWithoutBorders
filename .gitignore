@@ -1,4 +1,5 @@
 Resources/
+Website/node_modules
 WebApp/Back-end/target/
 WebApp/Back-end/.env
 WebApp/Back-end/.idea/

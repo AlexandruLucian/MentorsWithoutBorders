@@ -1,4 +1,4 @@
-import { injectReducer } from '../../store/reducers'
+import { injectReducer } from '../../../store/reducers'
 
 export default (store) => ({
   path : 'steps',
@@ -9,14 +9,14 @@ export default (store) => ({
     require.ensure([], (require) => {
       /*  Webpack - use require callback to define
           dependencies for bundling   */
-      const Steps = require('./StepsContainer').default
-      const reducer = require('./StepsModule').default
+      const StepsMain= require('./StepsMainContainer').default
+      const reducer = require('./StepsMainModule').default
 
       /*  Add the reducer to the store on key 'steps'  */
       injectReducer(store, { key: 'steps', reducer })
 
       /*  Return getComponent   */
-      cb(null, Steps)
+      cb(null, StepsMain)
 
     /* Webpack named bundle   */
     }, 'steps')
