@@ -1,0 +1,67 @@
+body {
+	margin: 0;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+div.header-container {
+	height: 60px;
+	margin: 20px 0 20px 30px	
+}
+
+div.header-container img.logo {
+	margin-right: 20px;
+}
+
+div.header-container h1.title {
+	font-family: 'Heebo', sans-serif;
+	font-size: 24px;
+	color: #999;
+}
+
+img.main-image-bg {
+	max-width: 100%;
+	height: auto;
+}
+
+img.main-image {
+	position: absolute;
+	top: 100px;
+	right: 70px;
+	max-width: 57vw;
+	height: auto;
+}
+
+div.text-container {
+	font-family: 'Yanone Kaffeesatz', sans-serif;	
+	position: absolute;
+	top: 50px;
+	width: 30vw;	
+	padding: 2vw 2vw 2vw 4vw;
+	text-align: center;
+	margin-top: 7vw;	
+}
+
+p.main-text {
+    font-size: 3.5vw;
+	color: white;
+}
+
+div.btn-apply-now {
+	display: inline-block;
+	cursor: pointer;
+	width: 15vw;
+	height: 3.5vw;
+	background-color: #ff5500;
+	border-radius: 3px;
+	padding-top: 1vw;
+	text-align: center;
+	font-size: 2.2vw;
+	color: white;
+}
